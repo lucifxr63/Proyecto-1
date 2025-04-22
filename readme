@@ -1,0 +1,94 @@
+# Proyecto CINF104 - Clasificación de GRD en Pacientes Hospital El Pino 🏥
+
+Este repositorio corresponde al desarrollo del **Proyecto 1** de la asignatura *Aprendizaje de Máquinas (CINF104)*. El objetivo principal es predecir el grupo relacionado de diagnóstico (**GRD**) de un paciente en base a su información clínica, utilizando distintos modelos de clasificación.
+
+---
+## 🧱 Arquitectura del Proyecto
+📂 raíz_del_proyecto/
+│
+├── 📂 data/                          # Carpeta donde se almacenan los datos originales del hospital
+│   ├── CIE-9.xlsx                   # Códigos oficiales de procedimientos médicos (CIE-9)
+│   ├── CIE-10.xlsx                  # Códigos oficiales de diagnósticos (CIE-10)
+│   ├── dataset_elpino.csv          # Dataset clínico principal con pacientes y GRDs
+│   └── Tablas maestras bases GRD.xlsx  # Archivo maestro para mapear los códigos GRD
+│
+├── 🐍 codigo.py                     # Script principal de preprocesamiento de datos
+│                                   # - Limpia y transforma datos
+│                                   # - Genera y exporta nuevo_dataset listo para modelar
+│
+├── 🐍 graficos.py                  # Script de análisis exploratorio
+│                                   # - Genera gráficos de distribución y correlación
+│                                   # - Guarda los resultados en la carpeta /Graficos
+│
+├── 🐍 modelos_prueba.py           # Script de entrenamiento y evaluación de modelos
+│                                   # - Entrena RF, DT, XGBoost y MLP
+│                                   # - Imprime métricas y guarda modelos entrenados
+│
+├── 📄 readme                       # Explicación detallada del proyecto, estructura y uso
+│
+├── 📄 requirements.txt             # Lista de dependencias necesarias para correr el proyecto
+│
+└── (opcional)
+    📂 Graficos/                    # Carpeta que se genera automáticamente con las imágenes
+    📂 modelos/                     # Carpeta que se genera automáticamente con los modelos entrenados
+
+
+
+## 📁 Archivos principales del proyecto
+
+### `codigo.py`
+Este archivo es el encargado de **preprocesar los datos**. Se realizan las siguientes tareas:
+
+- Carga del dataset principal (`dataset_elpino.csv`) junto con archivos auxiliares (`CIE-9.xlsx`, `CIE-10.xlsx`, `Tablas maestras bases GRD.xlsx`).
+- Limpieza de columnas y filas con datos nulos o irrelevantes.
+- Transformación de diagnósticos y procedimientos de texto a valores numéricos usando los códigos oficiales.
+- Conversión del campo `Sexo (Desc)` a valores binarios.
+- Mapeo de GRDs usando la tabla maestra.
+- Balanceo del conjunto de datos usando **RandomOverSampler**.
+- Generación del dataframe `nuevo_dataset`, ya listo para ser utilizado por los modelos.
+
+📦 Al final, exporta variables clave (`df`, `y`, `y_balanced`, `num_cols`, `nuevo_dataset`) que se utilizan en los demás scripts.
+
+---
+
+### `graficos.py`
+Este script genera **gráficos exploratorios y descriptivos** del dataset original y del dataset balanceado.
+
+Incluye:
+
+- Distribución de GRDs antes y después del balanceo.
+- Matriz de correlación de variables numéricas.
+- Distribución por sexo.
+- Boxplots e histogramas de las primeras variables numéricas.
+- **Distribución detallada de los GRDs más frecuentes (≥ 100 casos)** con remapeo de IDs para facilitar el análisis visual.
+
+🖼 Todos los gráficos se guardan automáticamente en la carpeta `/Graficos`.
+
+---
+
+### `modelos_prueba.py`
+Este archivo se encarga de **entrenar y evaluar varios modelos de clasificación** usando el `nuevo_dataset`.
+
+Modelos utilizados:
+
+- 🌲 Random Forest
+- 🌳 Árbol de Decisión
+- 🚀 XGBoost (requiere codificación de etiquetas con `LabelEncoder`)
+- 🧠 Red Neuronal (MLPClassifier)
+
+Además:
+
+- Se evalúa cada modelo con métricas estándar: accuracy, precisión, recall, F1-score, MAE y MSE.
+- Se genera una **matriz de confusión** para cada modelo y se guarda en la carpeta `/imagenes`.
+- Cada modelo es **guardado en la carpeta `/modelos`** en formato `.pkl` para su uso posterior (mediante `joblib`).
+
+---
+
+## ⚙️ Cómo ejecutar el proyecto
+
+1. Asegúrate de tener Python 3.10 o superior instalado.
+2. Instala los paquetes necesarios:
+
+```bash
+pip install pandas numpy scikit-learn matplotlib seaborn imbalanced-learn xgboost openpyxl joblib
+
