@@ -96,5 +96,8 @@ nuevo_dataset = df.copy()
 
 # Exportables
 __all__ = ["df", "y", "y_balanced", "num_cols", "nuevo_dataset"]
+# Diccionario invertido para GRDs: id interno → código GRD
+id_to_grd = {v: k for k, v in grd_dict.items() if v != 0}
+__all__ += ["id_to_grd"]
 
 print("✅ Datos listos para pruebas de modelos con `nuevo_dataset` disponible.")
